@@ -8,7 +8,7 @@ import { RigidBody } from "@react-three/rapier";
 import PhysicsBall from "./PhysicsBall";
 import { useRef, useState } from "react";
 import * as THREE from "three";
-export default function PhysicsDonut({ material }) {
+export default function PhysicsDonut() {
 	const ref = useRef();
 	const rigidBody = useRef();
 	const sparkles = useRef();
@@ -39,29 +39,16 @@ export default function PhysicsDonut({ material }) {
 			>
 				<mesh rotation={[-Math.PI / 2, 0, 0]}>
 					<torusGeometry />
-					{material ? (
-						<MeshTransmissionMaterial
-							color="aqua"
-							roughness={0}
-							distortion={1}
-							sheenColor="#ffffff00"
-							sheen={1}
-							distortionScale={0.75}
-							temporalDistortion={0.2}
-							thickness={0.75}
-							transmission={1}
-							iridescence={2}
-						/>
-					) : (
-						<MeshTransmissionMaterial
-							transmission={1}
-							chromaticAberration={2}
-							distortion={1}
-							temporalDistortion={0.2}
-							distortionScale={0.4}
-							thickness={0.2}
-						/>
-					)}
+
+					<MeshTransmissionMaterial
+						transmission={1}
+						chromaticAberration={2}
+						distortion={1}
+						temporalDistortion={0.2}
+						distortionScale={0.4}
+						thickness={0.2}
+					/>
+
 					<Sparkles
 						ref={sparkles}
 						scale={10}

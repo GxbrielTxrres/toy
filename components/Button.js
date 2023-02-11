@@ -15,19 +15,8 @@ export default function Button({ setMaterial, material }) {
 				}}
 				transform
 			>
-				<button
-					onClick={() => {
-						setMaterial(!material);
-					}}
-				>
-					Change Material
-				</button>
-
 				<div style={{ textAlign: "center", color: "white" }}>
 					Scroll to spin
-				</div>
-				<div style={{ textAlign: "center", color: "white" }}>
-					Swipe to rotate
 				</div>
 			</Html>
 		</mesh>

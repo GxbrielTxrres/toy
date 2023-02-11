@@ -9,9 +9,14 @@ export default function Experience() {
 
 	return (
 		<>
-			<Button material={material} setMaterial={setMaterial} />
-			<OrbitControls makeDefault enablePan={false} enableZoom={false} />
+			<OrbitControls
+				makeDefault
+				enablePan={false}
+				enableRotate={false}
+				enableZoom={false}
+			/>
 			<Center>
+				<Button />
 				<group scale={1.5}>
 					{/* <Message position={[0, 0, 0]} text="Let" />
 		<Message position={[0, -1.5, 0]} text="Go" /> */}
