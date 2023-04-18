@@ -46,7 +46,7 @@ export default function PhysicsDonut() {
 						temporalDistortion={0.2}
 						distortionScale={0.4}
 						thickness={0.7}
-						envMapIntensity={2}
+						envMapIntensity={0.2}
 					/>
 
 					<Sparkles
