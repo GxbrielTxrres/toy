@@ -70,7 +70,7 @@ function PhysicsBall({ color, position }) {
 		<RigidBody restitution={1} friction={2} colliders="ball">
 			<mesh scale={0.2} position={position}>
 				<sphereGeometry />
-				<MeshTransmissionMaterial args={[1, false]} color={color} />
+				<meshBasicMaterial color={color} />
 			</mesh>
 		</RigidBody>
 	);
