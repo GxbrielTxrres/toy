@@ -42,10 +42,10 @@ export default function PhysicsDonut() {
 					<MeshTransmissionMaterial
 						transmission={1}
 						chromaticAberration={2}
-						distortion={1}
+						distortion={1.5}
 						temporalDistortion={0.2}
 						distortionScale={0.4}
-						thickness={0.4}
+						thickness={0.7}
 						envMapIntensity={2}
 					/>
 
@@ -59,7 +59,7 @@ export default function PhysicsDonut() {
 				</mesh>
 			</RigidBody>
 			<PhysicsBall position={[-0.9, 0.3, 0]} color="blue" />
-			<PhysicsBall position={[-0.85, 0.3, 0]} color="red" />
+			<PhysicsBall position={[-0.8, 0.3, 0]} color="red" />
 			<PhysicsBall position={[0.9, 0.3, 0]} color="yellow" />
 		</group>
 	);
@@ -70,7 +70,7 @@ function PhysicsBall({ color, position }) {
 		<RigidBody restitution={1} friction={2} colliders="ball">
 			<mesh scale={0.2} position={position}>
 				<sphereGeometry />
-				<meshBasicMaterial color={color} />
+				<meshBasicMaterial transparent color={color} />
 			</mesh>
 		</RigidBody>
 	);

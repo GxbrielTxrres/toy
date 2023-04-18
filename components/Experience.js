@@ -7,7 +7,7 @@ export default function Experience() {
 	return (
 		<>
 			<Perf />
-			<Environment preset="night" background blur />
+			<Environment preset="night" />
 			<Physics gravity={[0, -9.82, 0]}>
 				<PhysicsDonut />
 			</Physics>
