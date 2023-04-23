@@ -41,7 +41,11 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		return () => window.removeEventListener("wheel", handleScroll);
+		window.addEventListener("touchstart", handleScroll);
+		return () => {
+			window.removeEventListener("wheel", handleScroll);
+			window.removeEventListener("touchStart", handleScroll);
+		};
 	}, []);
 
 	const { width, height } = useThree((state) => state.viewport);
