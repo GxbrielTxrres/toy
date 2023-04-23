@@ -3,7 +3,13 @@ import { shaderMaterial, useScroll, useTexture } from "@react-three/drei";
 import { vertexShader } from "lib/vertexShader";
 import { fragmentShader } from "lib/fragmentShader";
 import { Color, MathUtils, Vector2 } from "three";
-import { useRef, useState, useCallback, useEffect } from "react";
+import {
+	useRef,
+	useState,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+} from "react";
 import { useControls } from "leva";
 import gsap from "gsap";
 const BackgroundMaterial = shaderMaterial(
@@ -25,67 +31,51 @@ extend({ BackgroundMaterial });
 export default function Background(props) {
 	const { textureOne, textureTwo, rgbOffset, ...otherProps } = props;
 
-	let threshold;
-	let targetValue;
-	let interpolationFactor;
-
 	const ref = useRef();
 	const scroll = useScroll();
-	const scrollingRef = useRef(false);
-	const scrollTimeout = useRef(null);
-
-	const handleScroll = () => {
-		clearTimeout(scrollTimeout.current);
-		scrollingRef.current = true;
-
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
-	};
-
-	const handleTouchStart = (e) => {
-		e.preventDefault();
-
-		clearTimeout(scrollTimeout.current);
-		scrollingRef.current = true;
-
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
-	};
-
-	const handleTouchMove = (e) => {
-		e.preventDefault();
-
-		clearTimeout(scrollTimeout.current);
-		scrollingRef.current = true;
-
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
-	};
-
-	const handleTouchEnd = () => {
-		scrollingRef.current = false;
-	};
-
-	useEffect(() => {
-		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchstart", handleTouchStart);
-		window.addEventListener("touchmove", handleTouchMove);
-		window.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-		return () => {
-			window.removeEventListener("wheel", handleScroll);
-			window.removeEventListener("touchstart", handleTouchStart);
-			window.removeEventListener("touchmove", handleTouchMove);
-			window.removeEventListener("touchend", handleTouchEnd, {
-				passive: true,
-			});
-		};
-	}, []);
+	const scrollTimeline = useRef();
 
 	const { width, height } = useThree((state) => state.viewport);
+
+	useLayoutEffect(() => {
+		scrollTimeline.current = gsap.timeline();
+
+		scrollTimeline.current.to(
+			ref.current.material.uniforms.uProgress,
+			{
+				value: 1,
+				duration: 1,
+			},
+			0,
+		);
+
+		scrollTimeline.current.to(
+			ref.current.material.uniforms.uMixThreshold.value,
+			{
+				x: rgbOffset,
+				duration: 1,
+			},
+			0,
+		);
+
+		scrollTimeline.current.to(
+			ref.current.material.uniforms.uProgress,
+			{
+				value: 0,
+				duration: 1,
+			},
+			1,
+		);
+
+		scrollTimeline.current.to(
+			ref.current.material.uniforms.uMixThreshold.value,
+			{
+				x: 0,
+				duration: 1,
+			},
+			1,
+		);
+	}, []);
 
 	const oscillationFrequency = 0.25;
 	const oscillationAmplitudeX = 0.5;
@@ -101,41 +91,10 @@ export default function Background(props) {
 			oscillationAmplitudeX *
 			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
-		if (window.innerWidth < 500) {
-			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
-			interpolationFactor = 0.2;
-			threshold = 0;
-		} else {
-			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
-			interpolationFactor = 0.025;
-			threshold = 0;
-		}
-		if (
-			Math.abs(
-				ref.current.material.uniforms.uMixThreshold.value.x -
-					targetValue,
-			) > threshold
-		) {
-			ref.current.material.uniforms.uMixThreshold.value.x =
-				MathUtils.lerp(
-					ref.current.material.uniforms.uMixThreshold.value.x,
-					targetValue,
-					interpolationFactor,
-				);
-		}
-
-		if (
-			Math.abs(
-				ref.current.material.uniforms.uMixThreshold.value.y -
-					targetValue,
-			) > threshold
-		) {
-			ref.current.material.uniforms.uMixThreshold.value.y =
-				MathUtils.lerp(
-					ref.current.material.uniforms.uMixThreshold.value.y,
-					targetValue,
-					interpolationFactor,
-				);
+		if (scrollTimeline.current) {
+			scrollTimeline.current.seek(
+				scroll.offset * scrollTimeline.current.duration(),
+			);
 		}
 
 		ref.current.material.uniforms.u_Timee.value = time * 0.25;
