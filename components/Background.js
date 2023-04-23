@@ -43,12 +43,16 @@ export default function Background(props) {
 		}, 100);
 	};
 
-	const handleTouchStart = () => {
+	const handleTouchStart = (e) => {
 		scrollingRef.current = true;
 	};
 
 	const handleTouchEnd = () => {
-		scrollingRef.current = false;
+		clearTimeout(scrollTimeout.current);
+
+		scrollTimeout.current = setTimeout(() => {
+			scrollingRef.current = false;
+		}, 100);
 	};
 
 	useEffect(() => {
@@ -56,16 +60,11 @@ export default function Background(props) {
 		window.addEventListener("touchstart", handleTouchStart, {
 			passive: true,
 		});
-		window.addEventListener("touchmove", handleScroll, {
-			passive: true,
-		});
+
 		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			window.removeEventListener("touchstart", handleTouchStart, {
-				passive: true,
-			});
-			window.removeEventListener("touchmove", handleScroll, {
 				passive: true,
 			});
 			window.removeEventListener("touchend", handleTouchEnd, {
@@ -84,6 +83,13 @@ export default function Background(props) {
 	});
 
 	useFrame((state) => {
+		const prevOffset = scroll.offset;
+
+		if (prevOffset < scroll.offset) {
+			scrollingRef.current = true;
+		} else {
+			scrollingRef.current = false;
+		}
 		const time = state.clock.elapsedTime;
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
 		const mixThreshold =
@@ -92,7 +98,7 @@ export default function Background(props) {
 
 		if (window.innerWidth < 500) {
 			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
-			interpolationFactor = 0.1;
+			interpolationFactor = 0.2;
 			threshold = 0.001;
 		} else {
 			targetValue = scrollingRef.current ? rgbOffset : 0;
