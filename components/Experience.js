@@ -37,7 +37,7 @@ export default function Experience() {
 				textureOne={texture1}
 				textureTwo={texture2}
 				scale={[3, 5, 1]}
-				position-x={-3.5}
+				position-x={7}
 				rgbOffset={0.035}
 			/>
 
