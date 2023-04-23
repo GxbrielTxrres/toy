@@ -29,6 +29,8 @@ export default function Background(props) {
 	let targetValue;
 	let interpolationFactor;
 
+	const [initialTouchY, setInitialTouchY] = useState(0);
+
 	const ref = useRef();
 	const scroll = useScroll();
 	const scrollingRef = useRef(false);
@@ -44,20 +46,28 @@ export default function Background(props) {
 	};
 
 	const handleTouchStart = () => {
-		clearTimeout(scrollTimeout.current);
 		scrollingRef.current = true;
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
+		setInitialTouchY(e.touches[0].clientY);
 	};
 
-	const handleTouchMove = () => {
-		clearTimeout(scrollTimeout.current);
-		scrollingRef.current = true;
+	const handleTouchMove = (e) => {
+		const currentTouchY = e.touches[0].clientY;
+		const deltaY = initialTouchY - currentTouchY;
 
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
+		if (Math.abs(deltaY) > 10) {
+			// You can adjust this threshold to your preference
+			clearTimeout(scrollTimeout.current);
+			scrollingRef.current = true;
+
+			scrollTimeout.current = setTimeout(() => {
+				scrollingRef.current = false;
+			}, 100);
+		}
+	};
+
+	const handleTouchEnd = () => {
+		setInitialTouchY(0);
+		scrollingRef.current = false;
 	};
 
 	useEffect(() => {
@@ -68,6 +78,7 @@ export default function Background(props) {
 		window.addEventListener("touchmove", handleTouchMove, {
 			passive: true,
 		});
+		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
@@ -75,6 +86,9 @@ export default function Background(props) {
 				passive: true,
 			});
 			window.removeEventListener("touchmove", handleTouchMove, {
+				passive: true,
+			});
+			window.removeEventListener("touchend", handleTouchEnd, {
 				passive: true,
 			});
 		};
