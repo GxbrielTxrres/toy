@@ -41,10 +41,10 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchstart", handleScroll);
+		window.addEventListener("touchmove", handleScroll);
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
-			window.removeEventListener("touchStart", handleScroll);
+			window.removeEventListener("touchmove", handleScroll);
 		};
 	}, []);
 
