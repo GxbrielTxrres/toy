@@ -43,33 +43,13 @@ export default function Background(props) {
 		}, 100);
 	};
 
-	const handleTouchStart = (e) => {
-		scrollingRef.current = true;
-	};
-
-	const handleTouchEnd = () => {
-		scrollingRef.current = false;
-	};
-
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
 		window.addEventListener("scroll", handleScroll);
 
-		window.addEventListener("touchstart", handleTouchStart, {
-			passive: true,
-		});
-
-		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			window.removeEventListener("scroll", handleScroll);
-
-			window.removeEventListener("touchstart", handleTouchStart, {
-				passive: true,
-			});
-			window.removeEventListener("touchend", handleTouchEnd, {
-				passive: true,
-			});
 		};
 	}, []);
 
@@ -85,9 +65,9 @@ export default function Background(props) {
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
-		const mixThreshold =
-			oscillationAmplitudeX *
-			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
+		// const mixThreshold =
+		// 	oscillationAmplitudeX *
+		// 	Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
 		if (window.innerWidth < 500) {
 			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
@@ -98,6 +78,7 @@ export default function Background(props) {
 			interpolationFactor = 0.025;
 			threshold = 0;
 		}
+
 		if (
 			Math.abs(
 				ref.current.material.uniforms.uMixThreshold.value.x -
@@ -128,10 +109,10 @@ export default function Background(props) {
 
 		ref.current.material.uniforms.u_Timee.value = time * 0.25;
 
-		ref.current.material.uniforms.uScrollMix.value.set(
-			mixThreshold,
-			mixThreshold,
-		);
+		// ref.current.material.uniforms.uScrollMix.value.set(
+		// 	mixThreshold,
+		// 	mixThreshold,
+		// );
 	});
 
 	return (
