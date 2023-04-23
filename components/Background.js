@@ -39,12 +39,28 @@ export default function Background(props) {
 		}, 100);
 	};
 
+	const handleTouchStart = () => {
+		scrollingRef.current = true;
+	};
+
+	const handleTouchEnd = () => {
+		scrollingRef.current = false;
+	};
+
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchmove", handleScroll, { passive: true });
+		window.addEventListener("touchstart", handleTouchStart, {
+			passive: true,
+		});
+		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
-			window.removeEventListener("touchmove", handleScroll);
+			window.removeEventListener("touchstart", handleTouchStart, {
+				passive: true,
+			});
+			window.removeEventListener("touchend", handleTouchEnd, {
+				passive: true,
+			});
 		};
 	}, []);
 
