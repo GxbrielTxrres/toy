@@ -75,16 +75,19 @@ export default function Background(props) {
 
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
-
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
 		const mixThreshold =
 			oscillationAmplitudeX *
 			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
-		const targetValue = scrollingRef.current ? rgbOffset : 0;
+		let targetValue = scrollingRef.current ? rgbOffset : 0;
+
+		if (window.innerWidth < 500) {
+			targetValue = scrollingRef.current ? rgbOffset * 10 : 0;
+		}
+
 		const interpolationFactor = 0.025;
 		const threshold = 0.0001;
-
 		if (
 			Math.abs(
 				ref.current.material.uniforms.uMixThreshold.value.x -
