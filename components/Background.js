@@ -43,8 +43,15 @@ export default function Background(props) {
 		}, 100);
 	};
 
-	const handleTouchStart = () => {
+	const handleTouchStart = (e) => {
+		e.preventDefault();
+
+		clearTimeout(scrollTimeout.current);
 		scrollingRef.current = true;
+
+		scrollTimeout.current = setTimeout(() => {
+			scrollingRef.current = false;
+		}, 100);
 	};
 
 	const handleTouchMove = (e) => {
@@ -64,17 +71,13 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchstart", handleTouchStart, {
-			passive: true,
-		});
+		window.addEventListener("touchstart", handleTouchStart);
 		window.addEventListener("touchmove", handleTouchMove);
 		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
-			window.removeEventListener("touchstart", handleTouchStart, {
-				passive: true,
-			});
+			window.removeEventListener("touchstart", handleTouchStart);
 			window.removeEventListener("touchmove", handleTouchMove);
 			window.removeEventListener("touchend", handleTouchEnd, {
 				passive: true,
