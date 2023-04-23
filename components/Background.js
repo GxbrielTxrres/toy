@@ -41,7 +41,7 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchmove", handleScroll);
+		window.addEventListener("touchmove", handleScroll, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			window.removeEventListener("touchmove", handleScroll);
@@ -52,7 +52,6 @@ export default function Background(props) {
 
 	const oscillationFrequency = 0.25;
 	const oscillationAmplitudeX = 0.5;
-	const oscillationAmplitudeY = 1;
 
 	const { scalar } = useControls("Shader", {
 		scalar: { value: 45.0, min: 0, max: 150, step: 0.01 },
