@@ -46,10 +46,16 @@ export default function Background(props) {
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
 		document.addEventListener("scroll", handleScroll);
+		document.body.addEventListener("scroll", handleScroll, {
+			passive: false,
+		});
 
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			document.removeEventListener("scroll", handleScroll);
+			document.body.removeEventListener("scroll", handleScroll, {
+				passive: false,
+			});
 		};
 	}, []);
 
