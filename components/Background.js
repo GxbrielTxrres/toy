@@ -48,11 +48,7 @@ export default function Background(props) {
 	};
 
 	const handleTouchEnd = () => {
-		clearTimeout(scrollTimeout.current);
-
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
+		scrollingRef.current = false;
 	};
 
 	useEffect(() => {
@@ -92,11 +88,11 @@ export default function Background(props) {
 		if (window.innerWidth < 500) {
 			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
 			interpolationFactor = 0.2;
-			threshold = 0.001;
+			threshold = 0;
 		} else {
 			targetValue = scrollingRef.current ? rgbOffset : 0;
 			interpolationFactor = 0.025;
-			threshold = 0.001;
+			threshold = 0;
 		}
 		if (
 			Math.abs(
