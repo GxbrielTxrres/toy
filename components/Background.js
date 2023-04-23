@@ -44,32 +44,27 @@ export default function Background(props) {
 	};
 
 	const handleTouchStart = () => {
-		clearTimeout(scrollTimeout.current);
 		scrollingRef.current = true;
-
-		scrollTimeout.current = setTimeout(() => {
-			scrollingRef.current = false;
-		}, 100);
 	};
 
-	// const handleTouchEnd = () => {
-	// 	scrollingRef.current = false;
-	// };
+	const handleTouchEnd = () => {
+		scrollingRef.current = false;
+	};
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
 		window.addEventListener("touchstart", handleTouchStart, {
 			passive: true,
 		});
-		// window.addEventListener("touchend", handleTouchEnd, { passive: true });
+		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			window.removeEventListener("touchstart", handleTouchStart, {
 				passive: true,
 			});
-			// window.removeEventListener("touchend", handleTouchEnd, {
-			// 	passive: true,
-			// });
+			window.removeEventListener("touchend", handleTouchEnd, {
+				passive: true,
+			});
 		};
 	}, []);
 
@@ -92,7 +87,7 @@ export default function Background(props) {
 		if (window.innerWidth < 500) {
 			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
 			interpolationFactor = 0.1;
-			threshold = 0.0001;
+			threshold = 0.001;
 		} else {
 			targetValue = scrollingRef.current ? rgbOffset : 0;
 			interpolationFactor = 0.025;
