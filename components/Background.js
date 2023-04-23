@@ -25,6 +25,10 @@ extend({ BackgroundMaterial });
 export default function Background(props) {
 	const { textureOne, textureTwo, rgbOffset, ...otherProps } = props;
 
+	let threshold;
+	let targetValue;
+	let interpolationFactor;
+
 	const ref = useRef();
 	const scroll = useScroll();
 	const scrollingRef = useRef(false);
@@ -80,14 +84,15 @@ export default function Background(props) {
 			oscillationAmplitudeX *
 			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
-		let targetValue = scrollingRef.current ? rgbOffset : 0;
-
 		if (window.innerWidth < 500) {
-			targetValue = scrollingRef.current ? rgbOffset * 10 : 0;
+			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
+			interpolationFactor = 0.015;
+			threshold = 0.01;
+		} else {
+			targetValue = scrollingRef.current ? rgbOffset : 0;
+			interpolationFactor = 0.025;
+			threshold = 0.001;
 		}
-
-		const interpolationFactor = 0.025;
-		const threshold = 0.0001;
 		if (
 			Math.abs(
 				ref.current.material.uniforms.uMixThreshold.value.x -
