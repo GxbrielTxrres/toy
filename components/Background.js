@@ -43,26 +43,44 @@ export default function Background(props) {
 		}, 100);
 	};
 
-	const handleTouchStart = (e) => {
+	const handleTouchStart = () => {
 		scrollingRef.current = true;
+		scrollTimeout.current = setTimeout(() => {
+			scrollingRef.current = false;
+		}, 100);
 	};
 
-	const handleTouchEnd = () => {
-		scrollingRef.current = false;
+	const handleTouchMove = () => {
+		clearTimeout(scrollTimeout.current);
+		scrollingRef.current = true;
+
+		scrollTimeout.current = setTimeout(() => {
+			scrollingRef.current = false;
+		}, 100);
 	};
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
-		window.addEventListener("touchstart", handleScroll);
-		window.addEventListener("touchmove", handleScroll);
-		window.addEventListener("touchend", handleScroll);
-		return () => {
-			window.removeEventListener("wheel", handleScroll);
-			window.removeEventListener("touchstart", handleScroll);
-			window.removeEventListener("touchmove", handleScroll);
-			window.removeEventListener("touchend", handleScroll);
-		};
-	}, []);
+		window.addEventListener("touchstart", handleTouchStart, {
+			passive: true,
+		});
+		window.addEventListener("touchmove", handleTouchMove, {
+			passive: true,
+		});
+
+		return (
+			() => {
+				window.removeEventListener("wheel", handleScroll);
+				window.removeEventListener("touchstart", handleTouchStart, {
+					passive: true,
+				});
+				window.removeEventListener("touchmove", handleTouchMove, {
+					passive: true,
+				});
+			},
+			[]
+		);
+	});
 
 	const { width, height } = useThree((state) => state.viewport);
 
@@ -85,7 +103,7 @@ export default function Background(props) {
 			interpolationFactor = 0.2;
 			threshold = 0;
 		} else {
-			targetValue = scrollingRef.current ? rgbOffset : 0;
+			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
 			interpolationFactor = 0.025;
 			threshold = 0;
 		}

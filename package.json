@@ -14,6 +14,7 @@
     "@react-three/fiber": "^8.9.1",
     "@react-three/postprocessing": "^2.7.0",
     "@react-three/rapier": "^0.13.2",
+    "@use-gesture/react": "^10.2.26",
     "eslint": "8.34.0",
     "eslint-config-next": "13.1.6",
     "gsap": "^3.11.4",
