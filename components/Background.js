@@ -56,10 +56,16 @@ export default function Background(props) {
 		window.addEventListener("touchstart", handleTouchStart, {
 			passive: true,
 		});
+		window.addEventListener("touchmove", handleScroll, {
+			passive: true,
+		});
 		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
 			window.removeEventListener("touchstart", handleTouchStart, {
+				passive: true,
+			});
+			window.removeEventListener("touchmove", handleScroll, {
 				passive: true,
 			});
 			window.removeEventListener("touchend", handleTouchEnd, {
