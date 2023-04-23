@@ -44,6 +44,7 @@ export default function Background(props) {
 	};
 
 	const handleTouchStart = () => {
+		clearTimeout(scrollTimeout.current);
 		scrollingRef.current = true;
 		scrollTimeout.current = setTimeout(() => {
 			scrollingRef.current = false;
@@ -68,19 +69,16 @@ export default function Background(props) {
 			passive: true,
 		});
 
-		return (
-			() => {
-				window.removeEventListener("wheel", handleScroll);
-				window.removeEventListener("touchstart", handleTouchStart, {
-					passive: true,
-				});
-				window.removeEventListener("touchmove", handleTouchMove, {
-					passive: true,
-				});
-			},
-			[]
-		);
-	});
+		return () => {
+			window.removeEventListener("wheel", handleScroll);
+			window.removeEventListener("touchstart", handleTouchStart, {
+				passive: true,
+			});
+			window.removeEventListener("touchmove", handleTouchMove, {
+				passive: true,
+			});
+		};
+	}, []);
 
 	const { width, height } = useThree((state) => state.viewport);
 
