@@ -53,6 +53,8 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("wheel", handleScroll);
+		window.addEventListener("scroll", handleScroll);
+
 		window.addEventListener("touchstart", handleTouchStart, {
 			passive: true,
 		});
@@ -60,6 +62,8 @@ export default function Background(props) {
 		window.addEventListener("touchend", handleTouchEnd, { passive: true });
 		return () => {
 			window.removeEventListener("wheel", handleScroll);
+			window.removeEventListener("scroll", handleScroll);
+
 			window.removeEventListener("touchstart", handleTouchStart, {
 				passive: true,
 			});
