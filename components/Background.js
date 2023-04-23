@@ -83,13 +83,6 @@ export default function Background(props) {
 	});
 
 	useFrame((state) => {
-		const prevOffset = scroll.offset;
-
-		if (prevOffset < scroll.offset) {
-			scrollingRef.current = true;
-		} else {
-			scrollingRef.current = false;
-		}
 		const time = state.clock.elapsedTime;
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
 		const mixThreshold =
