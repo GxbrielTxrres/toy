@@ -91,8 +91,8 @@ export default function Background(props) {
 
 		if (window.innerWidth < 500) {
 			targetValue = scrollingRef.current ? rgbOffset * 5 : 0;
-			interpolationFactor = 0.015;
-			threshold = 0.01;
+			interpolationFactor = 0.025;
+			threshold = 0.001;
 		} else {
 			targetValue = scrollingRef.current ? rgbOffset : 0;
 			interpolationFactor = 0.025;
