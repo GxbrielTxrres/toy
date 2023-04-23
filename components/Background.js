@@ -133,7 +133,7 @@ export default function Background(props) {
 	});
 
 	return (
-		<mesh {...otherProps} ref={ref}>
+		<mesh {...otherProps} ref={ref} scale={[width, height, 1]}>
 			<planeGeometry args={[1, 1, 16, 16]} />
 			<backgroundMaterial
 				u_Timee={0}
