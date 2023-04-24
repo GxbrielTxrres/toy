@@ -20,7 +20,7 @@ const BackgroundMaterial = shaderMaterial(
 		uMixThreshold: new Vector2(0.0, 0.0),
 		uScrollMix: new Vector2(0.0, 0.0),
 		uScalar: undefined,
-		uProgress: 0,
+		uProgress: 1,
 	},
 	vertexShader,
 	fragmentShader,
@@ -33,76 +33,76 @@ export default function Background(props) {
 
 	const ref = useRef();
 	const scroll = useScroll();
-	const scrollTimeline = useRef();
+	const scrollTimeline = useRef(false);
 
 	const { width, height } = useThree((state) => state.viewport);
-	const { camera } = useThree();
-	useLayoutEffect(() => {
-		scrollTimeline.current = gsap.timeline();
+	// const { camera } = useThree();
+	// useLayoutEffect(() => {
+	// 	scrollTimeline.current = gsap.timeline();
 
-		scrollTimeline.current.to(
-			camera.position,
-			{
-				x: 0,
-				duration: 0.1,
-			},
-			0,
-		);
-		const scroll = (cameraPos, on, firstSix, secondFour) => {
-			scrollTimeline.current.to(
-				camera.position,
-				{
-					x: cameraPos,
-					duration: 1.5,
-					ease: "power4.inOut",
-				},
-				firstSix,
-			);
+	// 	scrollTimeline.current.to(
+	// 		camera.position,
+	// 		{
+	// 			x: 0,
+	// 			duration: 0.1,
+	// 		},
+	// 		0,
+	// 	);
+	// 	const scroll = (cameraPos, on, firstSix, secondFour) => {
+	// 		scrollTimeline.current.to(
+	// 			camera.position,
+	// 			{
+	// 				x: cameraPos,
+	// 				duration: 1.5,
+	// 				ease: "power4.inOut",
+	// 			},
+	// 			firstSix,
+	// 		);
 
-			scrollTimeline.current.to(
-				ref.current.material.uniforms.uProgress,
-				{
-					value: 1,
-					duration: 1,
-					ease: "power3.inOut",
-				},
-				on,
-			);
+	// 		scrollTimeline.current.to(
+	// 			ref.current.material.uniforms.uProgress,
+	// 			{
+	// 				value: 1,
+	// 				duration: 1,
+	// 				ease: "power3.inOut",
+	// 			},
+	// 			on,
+	// 		);
 
-			scrollTimeline.current.to(
-				ref.current.material.uniforms.uMixThreshold.value,
-				{
-					x: rgbOffset,
-					duration: 1,
-					ease: "power3.inOut",
-				},
-				on,
-			);
+	// 		scrollTimeline.current.to(
+	// 			ref.current.material.uniforms.uMixThreshold.value,
+	// 			{
+	// 				x: rgbOffset,
+	// 				duration: 1,
+	// 				ease: "power3.inOut",
+	// 			},
+	// 			on,
+	// 		);
 
-			scrollTimeline.current.to(
-				ref.current.material.uniforms.uProgress,
-				{
-					value: 0,
-					duration: 1,
-					ease: "power3.inOut",
-				},
-				secondFour,
-			);
+	// 		scrollTimeline.current.to(
+	// 			ref.current.material.uniforms.uProgress,
+	// 			{
+	// 				value: 0,
+	// 				duration: 1,
+	// 				ease: "power3.inOut",
+	// 			},
+	// 			secondFour,
+	// 		);
 
-			scrollTimeline.current.to(
-				ref.current.material.uniforms.uMixThreshold.value,
-				{
-					x: 0,
-					duration: 1,
-					ease: "power3.inOut",
-				},
-				secondFour,
-			);
-		};
+	// 		scrollTimeline.current.to(
+	// 			ref.current.material.uniforms.uMixThreshold.value,
+	// 			{
+	// 				x: 0,
+	// 				duration: 1,
+	// 				ease: "power3.inOut",
+	// 			},
+	// 			secondFour,
+	// 		);
+	// 	};
 
-		scroll(3.5, 0.1, 0.1, 1.1);
-		scroll(7, 1.8, 1.6, 3.1);
-	}, []);
+	// 	scroll(3.5, 0.1, 0.1, 1.1);
+	// 	scroll(7, 1.8, 1.6, 3.1);
+	// }, []);
 
 	const oscillationFrequency = 0.25;
 	const oscillationAmplitudeX = 0.5;
@@ -111,6 +111,9 @@ export default function Background(props) {
 		scalar: { value: 45.0, min: 0, max: 150, step: 0.01 },
 	});
 
+	const interpolationFactor = 0.01;
+	const threshold = 0.0001;
+
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
@@ -118,10 +121,31 @@ export default function Background(props) {
 			oscillationAmplitudeX *
 			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
-		if (scrollTimeline.current) {
-			scrollTimeline.current.seek(
-				scroll.offset * scrollTimeline.current.duration(),
-			);
+		// if (scrollTimeline.current) {
+		// 	scrollTimeline.current.seek(
+		// 		scroll.offset * scrollTimeline.current.duration(),
+		// 	);
+		// }
+		console.log(scroll.delta.toFixed(4));
+		if (scroll.delta.toFixed(4) > 0.0015) {
+			scrollTimeline.current = true;
+		} else {
+			scrollTimeline.current = false;
+		}
+
+		const targetValue = scrollTimeline.current ? rgbOffset * 1.5 : 0;
+		if (
+			Math.abs(
+				ref.current.material.uniforms.uMixThreshold.value.x -
+					targetValue,
+			) > threshold
+		) {
+			ref.current.material.uniforms.uMixThreshold.value.x =
+				MathUtils.lerp(
+					ref.current.material.uniforms.uMixThreshold.value.x,
+					targetValue,
+					interpolationFactor,
+				);
 		}
 
 		ref.current.material.uniforms.u_Timee.value = time * 0.25;

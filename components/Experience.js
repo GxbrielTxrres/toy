@@ -22,21 +22,18 @@ export default function Experience() {
 			<Background
 				textureOne={texture3}
 				textureTwo={texture4}
-				scale={[3, 5, 1]}
 				position-x={3.5}
 				rgbOffset={0.025}
 			/>
 			<Background
 				textureOne={texture1}
 				textureTwo={texture2}
-				scale={[3, 5, 1]}
 				rgbOffset={0.02}
 			/>
 
 			<Background
 				textureOne={texture1}
 				textureTwo={texture2}
-				scale={[3, 5, 1]}
 				position-x={7}
 				rgbOffset={0.035}
 			/>
