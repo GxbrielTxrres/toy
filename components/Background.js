@@ -1,5 +1,5 @@
 import { useThree, extend, useFrame } from "@react-three/fiber";
-import { shaderMaterial, useScroll } from "@react-three/drei";
+import { Html, Text, shaderMaterial, useScroll } from "@react-three/drei";
 import { vertexShader } from "lib/vertexShader";
 import { fragmentShader } from "lib/fragmentShader";
 import { MathUtils, Vector2 } from "three";
@@ -37,9 +37,14 @@ export default function Background(props) {
 	useEffect(() => {
 		const handleScroll = (event) => {
 			setScrollTop(window.scrollY);
+		};
+		window.onscroll = () => {
 			window.alert("s");
 		};
-		window.addEventListener("scroll", handleScroll);
+
+		window.scroll(() => {
+			window.alert("s");
+		});
 	}, []);
 
 	useFrame((state) => {
@@ -49,13 +54,13 @@ export default function Background(props) {
 		if (scrollTl.current) {
 			scrollTl.current.seek(scroll.offset * scrollTl.current.duration());
 		}
-		if (scroll.delta.toFixed(4) > 0.0015) {
+		if (scroll.delta.toFixed(4) > 0.0025) {
 			scrollTimeline.current = true;
 		} else {
 			scrollTimeline.current = false;
 		}
 
-		const targetValue = scrollTimeline.current ? rgbOffset * 1.5 : 0;
+		const targetValue = scrollTimeline.current ? rgbOffset * 3 : 0;
 		if (
 			Math.abs(
 				ref.current.material.uniforms.uMixThreshold.value.x -
@@ -75,6 +80,7 @@ export default function Background(props) {
 
 	return (
 		<mesh {...otherProps} ref={ref} scale={[width, height, 1]}>
+			<Text>{scrollTop}</Text>
 			<planeGeometry args={[1, 1, 16, 16]} />
 			<backgroundMaterial
 				u_Timee={0}
