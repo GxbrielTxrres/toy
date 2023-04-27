@@ -1,26 +1,17 @@
 import { useThree, extend, useFrame } from "@react-three/fiber";
-import { shaderMaterial, useScroll, useTexture } from "@react-three/drei";
+import { shaderMaterial, useScroll } from "@react-three/drei";
 import { vertexShader } from "lib/vertexShader";
 import { fragmentShader } from "lib/fragmentShader";
-import { Color, MathUtils, Vector2 } from "three";
-import {
-	useRef,
-	useState,
-	useCallback,
-	useEffect,
-	useLayoutEffect,
-} from "react";
-import { useControls } from "leva";
+import { MathUtils, Vector2 } from "three";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
+
 const BackgroundMaterial = shaderMaterial(
 	{
 		u_Timee: 0,
 		uTextureOne: undefined,
 		uTextureTwo: undefined,
 		uMixThreshold: new Vector2(0.0, 0.0),
-		uScrollMix: new Vector2(0.0, 0.0),
-		uScalar: undefined,
-		uProgress: 1,
 	},
 	vertexShader,
 	fragmentShader,
@@ -34,99 +25,30 @@ export default function Background(props) {
 	const ref = useRef();
 	const scroll = useScroll();
 	const scrollTimeline = useRef(false);
+	const scrollTl = useRef();
 
 	const { width, height } = useThree((state) => state.viewport);
-	// const { camera } = useThree();
-	// useLayoutEffect(() => {
-	// 	scrollTimeline.current = gsap.timeline();
-
-	// 	scrollTimeline.current.to(
-	// 		camera.position,
-	// 		{
-	// 			x: 0,
-	// 			duration: 0.1,
-	// 		},
-	// 		0,
-	// 	);
-	// 	const scroll = (cameraPos, on, firstSix, secondFour) => {
-	// 		scrollTimeline.current.to(
-	// 			camera.position,
-	// 			{
-	// 				x: cameraPos,
-	// 				duration: 1.5,
-	// 				ease: "power4.inOut",
-	// 			},
-	// 			firstSix,
-	// 		);
-
-	// 		scrollTimeline.current.to(
-	// 			ref.current.material.uniforms.uProgress,
-	// 			{
-	// 				value: 1,
-	// 				duration: 1,
-	// 				ease: "power3.inOut",
-	// 			},
-	// 			on,
-	// 		);
-
-	// 		scrollTimeline.current.to(
-	// 			ref.current.material.uniforms.uMixThreshold.value,
-	// 			{
-	// 				x: rgbOffset,
-	// 				duration: 1,
-	// 				ease: "power3.inOut",
-	// 			},
-	// 			on,
-	// 		);
-
-	// 		scrollTimeline.current.to(
-	// 			ref.current.material.uniforms.uProgress,
-	// 			{
-	// 				value: 0,
-	// 				duration: 1,
-	// 				ease: "power3.inOut",
-	// 			},
-	// 			secondFour,
-	// 		);
-
-	// 		scrollTimeline.current.to(
-	// 			ref.current.material.uniforms.uMixThreshold.value,
-	// 			{
-	// 				x: 0,
-	// 				duration: 1,
-	// 				ease: "power3.inOut",
-	// 			},
-	// 			secondFour,
-	// 		);
-	// 	};
-
-	// 	scroll(3.5, 0.1, 0.1, 1.1);
-	// 	scroll(7, 1.8, 1.6, 3.1);
-	// }, []);
-
-	const oscillationFrequency = 0.25;
-	const oscillationAmplitudeX = 0.5;
-
-	const { scalar } = useControls("Shader", {
-		scalar: { value: 45.0, min: 0, max: 150, step: 0.01 },
-	});
+	const { camera } = useThree();
 
 	const interpolationFactor = 0.01;
 	const threshold = 0.0001;
 
+	const [scrollTop, setScrollTop] = useState(0);
+	useEffect(() => {
+		const handleScroll = (event) => {
+			setScrollTop(window.scrollY);
+			window.alert("s");
+		};
+		window.addEventListener("scroll", handleScroll);
+	}, []);
+
 	useFrame((state) => {
 		const time = state.clock.elapsedTime;
 		// Use sine wave functions to oscillate the mixThreshold vector between two values
-		const mixThreshold =
-			oscillationAmplitudeX *
-			Math.abs(Math.sin(oscillationFrequency * scroll.offset * 0.1));
 
-		// if (scrollTimeline.current) {
-		// 	scrollTimeline.current.seek(
-		// 		scroll.offset * scrollTimeline.current.duration(),
-		// 	);
-		// }
-		console.log(scroll.delta.toFixed(4));
+		if (scrollTl.current) {
+			scrollTl.current.seek(scroll.offset * scrollTl.current.duration());
+		}
 		if (scroll.delta.toFixed(4) > 0.0015) {
 			scrollTimeline.current = true;
 		} else {
@@ -149,11 +71,6 @@ export default function Background(props) {
 		}
 
 		ref.current.material.uniforms.u_Timee.value = time * 0.25;
-
-		ref.current.material.uniforms.uScrollMix.value.set(
-			mixThreshold,
-			mixThreshold,
-		);
 	});
 
 	return (
@@ -163,7 +80,6 @@ export default function Background(props) {
 				u_Timee={0}
 				uTextureOne={textureOne}
 				uTextureTwo={textureTwo}
-				uScalar={scalar}
 			/>
 		</mesh>
 	);
