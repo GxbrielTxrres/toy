@@ -15,7 +15,7 @@ export default function MaskedContent({
 
 	const ref = useRef();
 
-	useFrame(({ camera }) => {
+	useFrame(({ camera, clock }) => {
 		ref.current.position.x = MathUtils.lerp(
 			ref.current.position.x,
 			camera.position.x,
@@ -27,6 +27,9 @@ export default function MaskedContent({
 			camera.position.y,
 			0.05,
 		);
+
+		ref.current.rotation.x = Math.sin(clock.elapsedTime * 0.25) * 2;
+		ref.current.rotation.y = Math.cos(clock.elapsedTime * 0.25) * 2;
 	});
 	return (
 		<group>
@@ -34,11 +37,7 @@ export default function MaskedContent({
 				{geometry}
 				<meshStandardMaterial {...stencil} />
 			</mesh>
-			<Background
-				position-y={bgPositionY}
-				position-z={bgPosition}
-				stencil={stencil}
-			/>
+			<Background position-z={bgPosition} stencil={stencil} />
 		</group>
 	);
 }

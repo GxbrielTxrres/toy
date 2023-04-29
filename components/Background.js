@@ -32,9 +32,15 @@ export default function Background(props) {
 
 	useEffect(() => {
 		window.addEventListener("mousemove", updateMousePosition, false);
+		window.addEventListener("touchmove", updateMousePosition, {
+			passive: false,
+		});
 
 		return () => {
 			window.removeEventListener("mousemove", updateMousePosition, false);
+			window.removeEventListener("touchmove", updateMousePosition, {
+				passive: false,
+			});
 		};
 	}, [updateMousePosition]);
 

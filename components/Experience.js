@@ -1,93 +1,54 @@
-import {
-	Environment,
-	useTexture,
-	OrbitControls,
-	useMask,
-	Mask,
-} from "@react-three/drei";
-import { Perf } from "r3f-perf";
-
 import Effects from "./Effects";
+import Masks from "./Masks";
 
-import { useRef } from "react";
-import MaskedContent from "./MaskedContent";
-import { generateUUID } from "three/src/math/MathUtils";
-import Background from "./Background";
+import { Environment, OrbitControls, useScroll } from "@react-three/drei";
+import { Perf } from "r3f-perf";
+import { useLayoutEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { gsap } from "gsap";
 
 export default function Experience() {
 	const ref = useRef();
+	const tl = useRef();
+	const scroll = useScroll();
 
-	const geometryArray = [
-		<boxGeometry key={0} />,
-		<sphereGeometry key={1} />,
-		<torusKnotGeometry key={2} />,
-	];
+	useLayoutEffect(() => {
+		tl.current = gsap.timeline();
 
-	const positions = [-2, -10, -21];
+		tl.current.to(
+			ref.current.target,
+			{
+				x: 7,
+			},
+			0,
+		);
+		tl.current.to(
+			ref.current.object.position,
+			{
+				x: 7,
+			},
+			0,
+		);
+	}, []);
 
-	const contentData = [
-		{
-			id: 1,
-			geometry: geometryArray[0],
-			positionZ: positions[0],
-			bgPositionY: 0,
-			key: generateUUID(),
-		},
-		{
-			id: 2,
-			geometry: geometryArray[1],
-			positionZ: positions[1],
-			bgPositionY: 0,
-			key: generateUUID(),
-		},
-		{
-			id: 3,
-			geometry: geometryArray[2],
-			positionZ: positions[2],
-			bgPositionY: 2,
-			key: generateUUID(),
-		},
-	];
-
-	const maskedData = [
-		{ id: 1, position: [0, 1, -2], key: generateUUID() },
-		{ id: 2, position: [0, 2, -4], key: generateUUID() },
-		{ id: 3, position: [0, 3, -6], key: generateUUID() },
-	];
+	useFrame(() => {
+		tl.current.seek(scroll.offset * tl.current.duration());
+	});
 
 	return (
 		<>
 			<Perf />
-
 			<Effects />
-			<color args={["#000000"]} attach={"background"} />
-			<Environment preset="night" background blur />
-			{maskedData.map((data, index) => {
-				return (
-					<Mask
-						id={data.id}
-						key={data.key}
-						colorWrite
-						position={[0, index, index * -2]}
-					>
-						<circleGeometry />
-					</Mask>
-				);
-			})}
-
-			{contentData.map((data, index) => {
-				return (
-					<MaskedContent
-						key={data.key}
-						id={data.id}
-						geometry={data.geometry}
-						bgPosition={data.positionZ}
-						bgPositionY={data.bgPositionY}
-						position={[0, 0, index * -10]}
-					/>
-				);
-			})}
-			<OrbitControls />
+			<color args={["#ffffff"]} attach={"background"} />
+			<Environment preset="night" />
+			<Masks />
+			<OrbitControls
+				enablePan={false}
+				enableRotate={false}
+				enableZoom={false}
+				ref={ref}
+				onEnd={() => console.log(ref.current.target)}
+			/>
 		</>
 	);
 }
