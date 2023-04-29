@@ -51,7 +51,7 @@ export default function Experience() {
 			<Perf />
 			<Effects />
 			<color args={["#ffffff"]} attach={"background"} />
-			<Environment preset="night" />
+			{/* <Environment preset="night" /> */}
 			<Masks />
 			<OrbitControls enabled={false} ref={ref} />
 		</>
