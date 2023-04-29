@@ -51,7 +51,7 @@ export default function Experience() {
 			{array.map((_, index) => {
 				return (
 					<MaskedContent
-						key={_.key}
+						key={_.value}
 						id={index + 1}
 						geometry={geometryArray[index]}
 						bgPosition={positions[index]}
