@@ -21,8 +21,8 @@ export default function Experience() {
 	}));
 
 	const array2 = Array.from({ length: 3 }, (_, index) => ({
-		key: index,
-		value: index,
+		key: index * 2,
+		value: index * 2,
 	}));
 
 	const geometryArray = [
