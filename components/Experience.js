@@ -13,12 +13,6 @@ import { useRef } from "react";
 import MaskedContent from "./MaskedContent";
 
 export default function Experience() {
-	const ref = useRef();
-
-	const array = new Array(3)
-		.fill(null)
-		.map((_, index) => ({ key: index, value: index }));
-
 	const geometryArray = [
 		<boxGeometry />,
 		<sphereGeometry />,
@@ -34,19 +28,6 @@ export default function Experience() {
 			<Effects />
 			<color args={["#000000"]} attach={"background"} />
 			<Environment preset="night" background blur />
-
-			{array.map((_, index) => {
-				return (
-					<Mask
-						id={index + 1}
-						key={_.key}
-						colorWrite
-						position={[0, index, index * -2]}
-					>
-						<circleGeometry />
-					</Mask>
-				);
-			})}
 
 			{[...Array(3)].map((value, index) => {
 				return (
