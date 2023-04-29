@@ -12,13 +12,10 @@ import Effects from "./Effects";
 import { useRef } from "react";
 import MaskedContent from "./MaskedContent";
 import { generateUUID } from "three/src/math/MathUtils";
+import Background from "./Background";
 
 export default function Experience() {
 	const ref = useRef();
-
-	const array = Array.from({ length: 3 }, (_, index) => ({
-		key: generateUUID(),
-	}));
 
 	const geometryArray = [
 		<boxGeometry />,
@@ -28,6 +25,33 @@ export default function Experience() {
 
 	const positions = [-2, -10, -25];
 
+	const contentData = [
+		{
+			id: 1,
+			geometry: geometryArray[0],
+			positionZ: positions[0],
+			key: generateUUID(),
+		},
+		{
+			id: 2,
+			geometry: geometryArray[1],
+			positionZ: positions[1],
+			key: generateUUID(),
+		},
+		{
+			id: 3,
+			geometry: geometryArray[2],
+			positionZ: positions[2],
+			key: generateUUID(),
+		},
+	];
+
+	const maskedData = [
+		{ id: 1, position: [0, 1, -2], key: generateUUID() },
+		{ id: 2, position: [0, 2, -4], key: generateUUID() },
+		{ id: 3, position: [0, 3, -6], key: generateUUID() },
+	];
+
 	return (
 		<>
 			<Perf />
@@ -35,29 +59,30 @@ export default function Experience() {
 			<Effects />
 			<color args={["#000000"]} attach={"background"} />
 			<Environment preset="night" background blur />
-
-			{array.map((obj, index) => {
+			{maskedData.map((data, index) => {
 				return (
-					<group key={obj.key}>
-						<Mask
-							id={index + 1}
-							key={obj.key}
-							colorWrite
-							position={[0, index, index * -2]}
-						>
-							<circleGeometry />
-						</Mask>
-						<MaskedContent
-							id={index + 1}
-							key={obj.key}
-							geometry={geometryArray[index]}
-							bgPosition={positions[index]}
-							position={[0, 0, index * -10]}
-						/>
-					</group>
+					<Mask
+						id={data.id}
+						key={data.key}
+						colorWrite
+						position={[0, index, index * -2]}
+					>
+						<circleGeometry />
+					</Mask>
 				);
 			})}
 
+			{contentData.map((data, index) => {
+				return (
+					<MaskedContent
+						key={data.key}
+						id={data.id}
+						geometry={data.geometry}
+						bgPosition={data.positionZ}
+						position={[0, 0, index * -10]}
+					/>
+				);
+			})}
 			<OrbitControls />
 		</>
 	);
