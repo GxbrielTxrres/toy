@@ -15,10 +15,9 @@ import MaskedContent from "./MaskedContent";
 export default function Experience() {
 	const ref = useRef();
 
-	const array = Array.from({ length: 3 }, (_, index) => ({
-		key: index,
-		value: index,
-	}));
+	const array = new Array(3)
+		.fill(null)
+		.map((_, index) => ({ key: index, value: index }));
 
 	const geometryArray = [
 		<boxGeometry />,
