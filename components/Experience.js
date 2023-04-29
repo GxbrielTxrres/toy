@@ -48,8 +48,8 @@ export default function Experience() {
 							<circleGeometry />
 						</Mask>
 						<MaskedContent
-							key={obj.key} // use the key from the object here
 							id={index + 1}
+							key={obj.key}
 							geometry={geometryArray[index]}
 							bgPosition={positions[index]}
 							position={[0, 0, index * -10]}
