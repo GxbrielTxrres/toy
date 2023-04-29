@@ -8,6 +8,7 @@ export default function MaskedContent({
 	id,
 	geometry,
 	bgPosition,
+	bgPositionY,
 	...otherProps
 }) {
 	const stencil = useMask(id);
@@ -33,7 +34,11 @@ export default function MaskedContent({
 				{geometry}
 				<meshStandardMaterial {...stencil} />
 			</mesh>
-			<Background position-z={bgPosition} stencil={stencil} />
+			<Background
+				position-y={bgPositionY}
+				position-z={bgPosition}
+				stencil={stencil}
+			/>
 		</group>
 	);
 }

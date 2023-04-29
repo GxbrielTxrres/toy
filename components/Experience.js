@@ -23,25 +23,28 @@ export default function Experience() {
 		<torusKnotGeometry key={2} />,
 	];
 
-	const positions = [-2, -10, -25];
+	const positions = [-2, -10, -21];
 
 	const contentData = [
 		{
 			id: 1,
 			geometry: geometryArray[0],
 			positionZ: positions[0],
+			bgPositionY: 0,
 			key: generateUUID(),
 		},
 		{
 			id: 2,
 			geometry: geometryArray[1],
 			positionZ: positions[1],
+			bgPositionY: 0,
 			key: generateUUID(),
 		},
 		{
 			id: 3,
 			geometry: geometryArray[2],
 			positionZ: positions[2],
+			bgPositionY: 2,
 			key: generateUUID(),
 		},
 	];
@@ -79,6 +82,7 @@ export default function Experience() {
 						id={data.id}
 						geometry={data.geometry}
 						bgPosition={data.positionZ}
+						bgPositionY={data.bgPositionY}
 						position={[0, 0, index * -10]}
 					/>
 				);
