@@ -15,7 +15,10 @@ import MaskedContent from "./MaskedContent";
 export default function Experience() {
 	const ref = useRef();
 
-	const array = Array.from({ length: 3 }, (_, index) => index);
+	const array = Array.from({ length: 3 }, (_, index) => ({
+		key: index,
+		value: index,
+	}));
 
 	const geometryArray = [
 		<boxGeometry />,
@@ -37,7 +40,7 @@ export default function Experience() {
 				return (
 					<Mask
 						id={index + 1}
-						key={index}
+						key={_.key}
 						colorWrite
 						position={[0, index, index * -2]}
 					>
@@ -49,7 +52,7 @@ export default function Experience() {
 			{array.map((_, index) => {
 				return (
 					<MaskedContent
-						key={index}
+						key={_.key}
 						id={index + 1}
 						geometry={geometryArray[index]}
 						bgPosition={positions[index]}
