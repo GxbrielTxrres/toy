@@ -21,11 +21,6 @@ export default function Experience() {
 		value: index,
 	}));
 
-	const array2 = Array.from({ length: 3 }, (_, index) => ({
-		key: generateUUID(),
-		value: index * 2,
-	}));
-
 	const geometryArray = [
 		<boxGeometry />,
 		<sphereGeometry />,
@@ -44,26 +39,23 @@ export default function Experience() {
 
 			{array.map((_, index) => {
 				return (
-					<Mask
-						id={index + 1}
-						key={_.key}
-						colorWrite
-						position={[0, index, index * -2]}
-					>
-						<circleGeometry />
-					</Mask>
-				);
-			})}
-
-			{array2.map((_, index) => {
-				return (
-					<MaskedContent
-						key={_.key}
-						id={index + 1}
-						geometry={geometryArray[index]}
-						bgPosition={positions[index]}
-						position={[0, 0, index * -10]}
-					/>
+					<>
+						<Mask
+							id={index + 1}
+							key={_.key}
+							colorWrite
+							position={[0, index, index * -2]}
+						>
+							<circleGeometry />
+						</Mask>
+						<MaskedContent
+							key={index}
+							id={index + 1}
+							geometry={geometryArray[index]}
+							bgPosition={positions[index]}
+							position={[0, 0, index * -10]}
+						/>
+					</>
 				);
 			})}
 
