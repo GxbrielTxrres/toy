@@ -11,17 +11,18 @@ import Effects from "./Effects";
 
 import { useRef } from "react";
 import MaskedContent from "./MaskedContent";
+import { generateUUID } from "three/src/math/MathUtils";
 
 export default function Experience() {
 	const ref = useRef();
 
 	const array = Array.from({ length: 3 }, (_, index) => ({
-		key: index,
+		key: generateUUID(),
 		value: index,
 	}));
 
 	const array2 = Array.from({ length: 3 }, (_, index) => ({
-		key: index * 2,
+		key: generateUUID(),
 		value: index * 2,
 	}));
 
