@@ -18,9 +18,9 @@ export default function Experience() {
 	const ref = useRef();
 
 	const geometryArray = [
-		<boxGeometry />,
-		<sphereGeometry />,
-		<torusKnotGeometry />,
+		<boxGeometry key={0} />,
+		<sphereGeometry key={1} />,
+		<torusKnotGeometry key={2} />,
 	];
 
 	const positions = [-2, -10, -25];
