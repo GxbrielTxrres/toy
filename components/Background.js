@@ -11,8 +11,6 @@ const BackgroundMaterial = shaderMaterial(
 		uTextureOne: undefined,
 		uTextureTwo: undefined,
 		uResolution: new Vector2(),
-		uMixThreshold: new Vector2(0.1, 0.1),
-		uMouse: new Vector2(0, 0),
 	},
 	vertexShader,
 	fragmentShader,
@@ -24,32 +22,10 @@ export default function Background(props) {
 	const { textureOne, textureTwo, rgbOffset, stencil, ...otherProps } = props;
 
 	const ref = useRef();
-	const mousePosition = useRef({ x: 0, y: 0 });
-
-	const updateMousePosition = useCallback((e) => {
-		mousePosition.current = { x: e.pageX, y: e.pageY };
-	}, []);
-
-	useEffect(() => {
-		window.addEventListener("mousemove", updateMousePosition, false);
-		window.addEventListener("touchmove", updateMousePosition, {
-			passive: true,
-		});
-
-		return () => {
-			window.removeEventListener("mousemove", updateMousePosition, false);
-			window.removeEventListener("touchmove", updateMousePosition, {
-				passive: true,
-			});
-		};
-	}, [updateMousePosition]);
 
 	useFrame(({ clock, camera }) => {
 		ref.current.material.uniforms.u_Timee.value = clock.elapsedTime;
-		ref.current.material.uniforms.uMouse.value = new Vector2(
-			mousePosition.current.x,
-			mousePosition.current.y,
-		);
+
 		ref.current.material.uniforms.uResolution.value = new Vector2(
 			window.innerWidth,
 			window.innerHeight,

@@ -43,7 +43,9 @@ export default function Experience() {
 	}, []);
 
 	useFrame(() => {
-		tl.current.seek(scroll.offset * tl.current.duration());
+		if (tl.current) {
+			tl.current.seek(scroll.offset * tl.current.duration());
+		}
 	});
 
 	return (
@@ -51,7 +53,7 @@ export default function Experience() {
 			<Perf />
 			<Effects />
 			<color args={["#ffffff"]} attach={"background"} />
-			{/* <Environment preset="night" /> */}
+			<Environment preset="night" />
 			<Masks />
 			<OrbitControls enabled={false} ref={ref} />
 		</>
