@@ -9,7 +9,11 @@ import Background from "components/Background";
 export default function App({ Component, pageProps }) {
 	return (
 		<>
-			<Canvas style={{ ...styles }} gl={{ antialias: false }}>
+			<Canvas
+				style={{ ...styles }}
+				gl={{ antialias: false }}
+				camera={{ fov: 100 }}
+			>
 				<ScrollControls pages={3} distance={2}>
 					<Experience />
 				</ScrollControls>

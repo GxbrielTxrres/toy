@@ -19,6 +19,7 @@ export default function Experience() {
 			ref.current.target,
 			{
 				x: 7,
+				duration: 1,
 			},
 			0,
 		);
@@ -26,8 +27,18 @@ export default function Experience() {
 			ref.current.object.position,
 			{
 				x: 7,
+				duration: 1,
 			},
 			0,
+		);
+		tl.current.to(
+			ref.current.object.rotation,
+			{
+				y: -Math.PI,
+				duration: 0.5,
+				ease: "power3.inOut",
+			},
+			0.75,
 		);
 	}, []);
 
@@ -42,13 +53,7 @@ export default function Experience() {
 			<color args={["#ffffff"]} attach={"background"} />
 			<Environment preset="night" />
 			<Masks />
-			<OrbitControls
-				enablePan={false}
-				enableRotate={false}
-				enableZoom={false}
-				ref={ref}
-				onEnd={() => console.log(ref.current.target)}
-			/>
+			<OrbitControls enabled={false} ref={ref} />
 		</>
 	);
 }

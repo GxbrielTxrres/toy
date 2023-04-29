@@ -1,13 +1,7 @@
 import MaskedContent from "./MaskedContent";
 
-import {
-	useMask,
-	Mask,
-	Center,
-	Float,
-	MeshDistortMaterial,
-	MeshWobbleMaterial,
-} from "@react-three/drei";
+import { Mask, Center } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import { generateUUID } from "three/src/math/MathUtils";
 
 export default function Masks({ scales }) {
