@@ -30,13 +30,13 @@ export default function Masks({ scales }) {
 	];
 
 	const maskedData = [
-		{ id: 1, position: [0, 1, -2], key: generateUUID() },
-		{ id: 2, position: [0, 2, -4], key: generateUUID() },
-		{ id: 3, position: [0, 3, -6], key: generateUUID() },
+		{ id: 1, key: generateUUID() },
+		{ id: 2, key: generateUUID() },
+		{ id: 3, key: generateUUID() },
 	];
 
 	return (
-		<Center position={[-2, 0, 0]}>
+		<Center position={[0, 0, 0]}>
 			{maskedData.map((data, index) => {
 				return (
 					<Mask

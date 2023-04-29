@@ -32,7 +32,7 @@ export default function Experience() {
 				duration: 0.5,
 				ease: "power3.inOut",
 			},
-			0.75,
+			0.9,
 		);
 	}, []);
 
@@ -48,6 +48,7 @@ export default function Experience() {
 			<Effects />
 			<color args={["#ffffff"]} attach={"background"} />
 			<Environment preset="night" />
+
 			<Masks />
 		</>
 	);

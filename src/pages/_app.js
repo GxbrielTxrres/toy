@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
 				gl={{ antialias: false }}
 				camera={{ fov: 100 }}
 			>
-				<ScrollControls pages={3}>
+				<ScrollControls pages={2}>
 					<Experience />
 				</ScrollControls>
 			</Canvas>
