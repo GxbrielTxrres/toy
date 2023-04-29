@@ -18,7 +18,6 @@ export default function Experience() {
 
 	const array = Array.from({ length: 3 }, (_, index) => ({
 		key: generateUUID(),
-		value: index,
 	}));
 
 	const geometryArray = [
@@ -37,25 +36,25 @@ export default function Experience() {
 			<color args={["#000000"]} attach={"background"} />
 			<Environment preset="night" background blur />
 
-			{array.map((_, index) => {
+			{array.map((obj, index) => {
 				return (
-					<>
+					<group key={obj.key}>
 						<Mask
 							id={index + 1}
-							key={_.key}
+							key={obj.key}
 							colorWrite
 							position={[0, index, index * -2]}
 						>
 							<circleGeometry />
 						</Mask>
 						<MaskedContent
-							key={index}
+							key={obj.key} // use the key from the object here
 							id={index + 1}
 							geometry={geometryArray[index]}
 							bgPosition={positions[index]}
 							position={[0, 0, index * -10]}
 						/>
-					</>
+					</group>
 				);
 			})}
 
