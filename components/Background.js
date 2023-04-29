@@ -1,17 +1,18 @@
-import { useThree, extend, useFrame } from "@react-three/fiber";
-import { Html, Text, shaderMaterial, useScroll } from "@react-three/drei";
+import { useThree, extend, useFrame, useScroll } from "@react-three/fiber";
+import { shaderMaterial } from "@react-three/drei";
 import { vertexShader } from "lib/vertexShader";
 import { fragmentShader } from "lib/fragmentShader";
-import { MathUtils, Vector2 } from "three";
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
+import { Vector2 } from "three";
+import { useRef, useCallback, useEffect } from "react";
 
 const BackgroundMaterial = shaderMaterial(
 	{
 		u_Timee: 0,
 		uTextureOne: undefined,
 		uTextureTwo: undefined,
-		uMixThreshold: new Vector2(0.0, 0.0),
+		uResolution: new Vector2(),
+		uMixThreshold: new Vector2(0.1, 0.1),
+		uMouse: new Vector2(0, 0),
 	},
 	vertexShader,
 	fragmentShader,
@@ -20,69 +21,42 @@ const BackgroundMaterial = shaderMaterial(
 extend({ BackgroundMaterial });
 
 export default function Background(props) {
-	const { textureOne, textureTwo, rgbOffset, ...otherProps } = props;
+	const { textureOne, textureTwo, rgbOffset, stencil, ...otherProps } = props;
 
 	const ref = useRef();
-	const scroll = useScroll();
-	const scrollTimeline = useRef(false);
-	const scrollTl = useRef();
+	const mousePosition = useRef({ x: 0, y: 0 });
 
-	const { width, height } = useThree((state) => state.viewport);
-	const { camera } = useThree();
-
-	const interpolationFactor = 0.01;
-	const threshold = 0.0001;
-
-	const [scrollTop, setScrollTop] = useState(0);
-	useEffect(() => {
-		const handleScroll = (event) => {
-			setScrollTop(window.scrollY);
-		};
-		window.onscroll = () => {
-			window.alert("s");
-		};
-
-		window.scroll(() => {
-			window.alert("s");
-		});
+	const updateMousePosition = useCallback((e) => {
+		mousePosition.current = { x: e.pageX, y: e.pageY };
 	}, []);
 
-	useFrame((state) => {
-		const time = state.clock.elapsedTime;
-		// Use sine wave functions to oscillate the mixThreshold vector between two values
+	useEffect(() => {
+		window.addEventListener("mousemove", updateMousePosition, false);
 
-		if (scrollTl.current) {
-			scrollTl.current.seek(scroll.offset * scrollTl.current.duration());
-		}
-		if (scroll.delta.toFixed(4) > 0.0025) {
-			scrollTimeline.current = true;
-		} else {
-			scrollTimeline.current = false;
-		}
+		return () => {
+			window.removeEventListener("mousemove", updateMousePosition, false);
+		};
+	}, [updateMousePosition]);
 
-		const targetValue = scrollTimeline.current ? rgbOffset * 3 : 0;
-		if (
-			Math.abs(
-				ref.current.material.uniforms.uMixThreshold.value.x -
-					targetValue,
-			) > threshold
-		) {
-			ref.current.material.uniforms.uMixThreshold.value.x =
-				MathUtils.lerp(
-					ref.current.material.uniforms.uMixThreshold.value.x,
-					targetValue,
-					interpolationFactor,
-				);
-		}
-
-		ref.current.material.uniforms.u_Timee.value = time * 0.25;
+	useFrame(({ clock, camera }) => {
+		ref.current.material.uniforms.u_Timee.value = clock.elapsedTime;
+		ref.current.material.uniforms.uMouse.value = new Vector2(
+			mousePosition.current.x,
+			mousePosition.current.y,
+		);
+		ref.current.material.uniforms.uResolution.value = new Vector2(
+			window.innerWidth,
+			window.innerHeight,
+		);
 	});
+
+	const { width, height } = useThree((state) => state.viewport);
 
 	return (
 		<mesh {...otherProps} ref={ref} scale={[width, height, 1]}>
-			<Text>{scrollTop}</Text>
 			<planeGeometry args={[1, 1, 16, 16]} />
 			<backgroundMaterial
+				{...stencil}
 				u_Timee={0}
 				uTextureOne={textureOne}
 				uTextureTwo={textureTwo}

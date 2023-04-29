@@ -1,57 +1,64 @@
-import { Environment, useTexture } from "@react-three/drei";
+import {
+	Environment,
+	useTexture,
+	OrbitControls,
+	useMask,
+	Mask,
+} from "@react-three/drei";
 import { Perf } from "r3f-perf";
-import { Model } from "./Chromatic_core";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
-import { PlasmaModel } from "./Chromatic_plasma";
-import Background from "./Background";
+
+import Effects from "./Effects";
+
+import { useRef } from "react";
+import MaskedContent from "./MaskedContent";
 
 export default function Experience() {
-	const [texture1, texture2, texture3, texture4] = useTexture([
-		"./first.png",
-		"./second.png",
-		"left.png",
-		"right.png",
-	]);
+	const ref = useRef();
+
+	const array = Array.from({ length: 3 }, (_, index) => index);
+
+	const geometryArray = [
+		<boxGeometry />,
+		<sphereGeometry />,
+		<torusKnotGeometry />,
+	];
+
+	const positions = [-2, -10, -25];
 
 	return (
 		<>
 			<Perf />
+
+			<Effects />
 			<color args={["#000000"]} attach={"background"} />
-			<Environment preset="night" />
-			<Background
-				textureOne={texture3}
-				textureTwo={texture4}
-				position-x={7}
-				rgbOffset={0.025}
-			/>
-			<Background
-				textureOne={texture1}
-				textureTwo={texture2}
-				rgbOffset={0.02}
-			/>
+			<Environment preset="night" background blur />
 
-			<Background
-				textureOne={texture1}
-				textureTwo={texture2}
-				position-x={14}
-				rgbOffset={0.035}
-			/>
+			{array.map((_, index) => {
+				return (
+					<Mask
+						id={index + 1}
+						key={index}
+						colorWrite
+						position={[0, index, index * -2]}
+					>
+						<circleGeometry />
+					</Mask>
+				);
+			})}
 
-			{/* <OrbitControls /> */}
-			{/* <Model position-y={-3} /> */}
-			{/* <PlasmaModel /> */}
+			{array.map((_, index) => {
+				return (
+					<MaskedContent
+						key={index}
+						id={index + 1}
+						geometry={geometryArray[index]}
+						bgPosition={positions[index]}
+						position={[0, 0, index * -10]}
+					/>
+				);
+			})}
 
-			<EffectComposer multisampling={0}>
-				<Bloom
-					blendFunction={BlendFunction.ADD}
-					mipmapBlur
-					luminanceThreshold={0}
-					luminanceSmoothing={0}
-					levels={5}
-					radius={0.6}
-				/>
-			</EffectComposer>
+			<OrbitControls />
 		</>
 	);
 }
