@@ -48,10 +48,23 @@ export default function Experience() {
 				);
 			})}
 
-			{array.map((_, index) => {
+			{[...Array(3)].map((value, index) => {
+				return (
+					<Mask
+						id={index + 1}
+						key={index}
+						colorWrite
+						position={[0, index, index * -2]}
+					>
+						<circleGeometry />
+					</Mask>
+				);
+			})}
+
+			{[...Array(3)].map((value, index) => {
 				return (
 					<MaskedContent
-						key={_.value}
+						key={index}
 						id={index + 1}
 						geometry={geometryArray[index]}
 						bgPosition={positions[index]}
