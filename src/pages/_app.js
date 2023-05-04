@@ -11,7 +11,7 @@ export default function App({ Component, pageProps }) {
 			<Canvas
 				style={{ ...styles }}
 				gl={{ antialias: false }}
-				camera={{ fov: 100 }}
+				camera={{ fov: 100, position: [0, 0, 3] }}
 			>
 				<ScrollControls pages={2}>
 					<Experience />

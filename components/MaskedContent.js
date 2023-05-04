@@ -1,7 +1,7 @@
-import { useMask, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useMask } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
-import { Color, MathUtils } from "three";
+import { MathUtils } from "three";
 import Background from "./Background";
 
 export default function MaskedContent({
@@ -9,10 +9,11 @@ export default function MaskedContent({
 	geometry,
 	bgPosition,
 	bgPositionY,
+	width,
+	height,
 	...otherProps
 }) {
 	const stencil = useMask(id);
-
 	const ref = useRef();
 
 	useFrame(({ camera, clock }) => {
@@ -31,13 +32,19 @@ export default function MaskedContent({
 		ref.current.rotation.x = Math.sin(clock.elapsedTime * 0.25) * 2;
 		ref.current.rotation.y = Math.cos(clock.elapsedTime * 0.25) * 2;
 	});
+
 	return (
 		<group>
 			<mesh ref={ref} {...otherProps}>
 				{geometry}
 				<meshStandardMaterial {...stencil} />
 			</mesh>
-			<Background position-z={bgPosition} stencil={stencil} />
+			<Background
+				height={height}
+				width={width}
+				position-z={bgPosition}
+				stencil={stencil}
+			/>
 		</group>
 	);
 }

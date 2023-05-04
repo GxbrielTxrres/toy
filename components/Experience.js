@@ -3,70 +3,33 @@ import Masks from "./Masks";
 
 import { Environment, OrbitControls, useScroll } from "@react-three/drei";
 import { Perf } from "r3f-perf";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
+import Camera from "./Camera";
+import Color from "./Color";
+import InstancedParticles from "./Particles";
+import NoiseInstances from "./NoiseInstances";
 
 export default function Experience() {
-	const ref = useRef();
-	const tl = useRef();
+	const [tl, setTl] = useState();
+	const timeline = useRef();
+	const color = useRef();
+
 	const scroll = useScroll();
-	const { camera } = useThree();
+
 	useLayoutEffect(() => {
-		tl.current = gsap.timeline();
+		timeline.current = gsap.timeline();
+		const context = gsap.context(() => {
+			setTl(timeline.current);
+		});
 
-		tl.current.to(
-			camera.position,
-			{
-				x: 7,
-				duration: 1,
-				ease: "power3.in",
-			},
-			0,
-		);
-
-		tl.current.to(
-			camera.rotation,
-			{
-				y: -Math.PI / 2,
-				duration: 0.5,
-				ease: "power3.inOut",
-			},
-			0.9,
-		);
-
-		tl.current.to(
-			ref.current.rotation,
-			{
-				x: Math.sin(Math.PI * 2),
-				y: Math.cos(Math.PI * 2),
-				duration: 0.5,
-			},
-			1.5,
-		);
-
-		tl.current.to(
-			ref.current.position,
-			{
-				y: 1,
-				duration: 1,
-			},
-			1.5,
-		);
-
-		tl.current.to(
-			camera.position,
-			{
-				y: -5,
-				duration: 2,
-			},
-			1.5,
-		);
+		return () => context.revert();
 	}, []);
 
 	useFrame(() => {
-		if (tl.current) {
-			tl.current.seek(scroll.offset * tl.current.duration());
+		if (timeline.current) {
+			timeline.current.seek(scroll.offset * timeline.current.duration());
 		}
 	});
 
@@ -74,12 +37,14 @@ export default function Experience() {
 		<>
 			<Perf />
 			<Effects />
-			<color args={["#ffffff"]} attach={"background"} />
+			<Color tl={tl} />
+			<InstancedParticles />
+			<NoiseInstances />
+			<InstancedParticles rotation={[Math.PI, 0, 0]} />
+
 			<Environment preset="night" />
-			<mesh ref={ref} position={[10, 0, 5]}>
-				<boxGeometry />
-				<meshStandardMaterial />
-			</mesh>
+
+			<Camera tl={tl} />
 			<Masks />
 		</>
 	);

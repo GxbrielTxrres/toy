@@ -38,7 +38,7 @@ export default function Effects() {
 		<>
 			<EffectComposer multisampling={0} stencilBuffer={true}>
 				<Bloom
-					blendFunction={BlendFunction.ALPHA}
+					blendFunction={BlendFunction.ADD}
 					mipmapBlur
 					luminanceThreshold={0}
 					luminanceSmoothing={0}
