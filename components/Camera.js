@@ -1,15 +1,24 @@
-import { useThree } from "@react-three/fiber";
-import { useLayoutEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useLayoutEffect } from "react";
 
 export default function Camera({ tl }) {
-	const { camera } = useThree();
+	const { camera, size } = useThree();
+
+	useEffect(() => {
+		if (size.width <= 600) {
+			camera.fov = 100;
+		} else {
+			camera.fov = 60;
+		}
+	}, []);
 
 	useLayoutEffect(() => {
 		if (tl) {
 			tl.to(
 				camera.position,
 				{
-					x: 7,
+					y: -1.25,
+					z: -3,
 					duration: 3,
 					ease: "power3.in",
 				},
@@ -19,19 +28,11 @@ export default function Camera({ tl }) {
 			tl.to(
 				camera.rotation,
 				{
-					y: -Math.PI / 2,
+					x: Math.PI * 0.025,
 					duration: 0.5,
-					ease: "power3.inOut",
+					ease: "power3.out",
 				},
-				2.75,
-			);
-
-			tl.to(
-				camera.position,
-				{
-					z: 10,
-				},
-				3,
+				2.5,
 			);
 		}
 	}, [tl]);

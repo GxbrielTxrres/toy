@@ -15,6 +15,17 @@ export default function Color({ tl }) {
 				},
 				0,
 			);
+
+			tl.to(
+				color.current,
+				{
+					r: 0.1,
+					g: 0.1,
+					b: 0.1,
+					duration: 1,
+				},
+				3,
+			);
 		}
 	}, [tl]);
 	return <color ref={color} args={["#ffffff"]} attach={"background"} />;
