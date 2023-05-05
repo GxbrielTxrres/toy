@@ -6,7 +6,7 @@ export default function Camera({ tl }) {
 
 	useEffect(() => {
 		if (size.width <= 600) {
-			camera.fov = 100;
+			camera.fov = 80;
 		} else {
 			camera.fov = 60;
 		}
