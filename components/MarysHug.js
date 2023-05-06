@@ -10,22 +10,41 @@ Title: Mary's hug
 import React, { useLayoutEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Color } from "three";
+import { useFrame } from "@react-three/fiber";
 export function MarysHug(props) {
 	const { tl, ...otherProps } = props;
 	const ref = useRef();
 	const man = useRef();
 	const { nodes, materials } = useGLTF("/marys_hug-transformed.glb");
 
-	Object.values(materials).forEach((material) => {
-		material.envMapIntensity = 0.2;
-		material.emissive = new Color(3, 3, 3);
-		material.transparent = true;
-	});
-
 	useLayoutEffect(() => {
-		man.current.material.opacity = 0;
-		if (tl) {
-			Object.values(materials).forEach((material) => {
+		const children = ref.current.children[0].children[0].children;
+		// if (children) {
+		// 	children.forEach((child) => {
+		// 		child.material.emissive = new Color(2, 0, 0);
+		// 		console.log(child.material.emissive);
+		// 		if (tl) {
+		// 			tl.to(
+		// 				child.material.emissive,
+		// 				{
+		// 					r: 0,
+		// 					g: 0,
+		// 					b: 0,
+		// 					duration: 1,
+		// 				},
+		// 				2,
+		// 			);
+		// 		}
+		// 	});
+		// }
+
+		Object.values(materials).forEach((material) => {
+			material.envMapIntensity = 0.4;
+			material.emissive = new Color(3, 3, 3);
+			material.opacity = 0;
+			material.transparent = true;
+
+			if (tl) {
 				tl.to(
 					material.emissive,
 					{
@@ -33,8 +52,29 @@ export function MarysHug(props) {
 						g: 0,
 						b: 0,
 						duration: 1,
+						ease: "power3.inOut",
 					},
 					2,
+				);
+
+				tl.to(
+					material,
+					{
+						opacity: 1,
+						duration: 1,
+						ease: "power3.inOut",
+					},
+					2,
+				);
+
+				tl.to(
+					ref.current.rotation,
+					{
+						y: Math.PI * 2,
+						duration: 4,
+						ease: "power3.out",
+					},
+					3,
 				);
 
 				tl.to(
@@ -43,32 +83,25 @@ export function MarysHug(props) {
 						r: 3,
 						g: 3,
 						b: 3,
+						duration: 1,
+						ease: "power3.inOut",
+					},
+					3,
+				);
+
+				tl.to(
+					ref.current.position,
+					{
+						y: 4,
 						duration: 3,
-					},
-					3.5,
-				);
-
-				tl.to(
-					material,
-					{
-						opacity: 0,
-						duration: 1.5,
-					},
-					3.5,
-				);
-			});
-
-			if (tl) {
-				tl.to(
-					man.current.material,
-					{
-						opacity: 1,
+						ease: "power3.out",
 					},
 					3,
 				);
 			}
-		}
+		});
 	}, [tl]);
+
 	return (
 		<group {...otherProps} ref={ref} dispose={null}>
 			<group rotation={[-Math.PI / 2, 0, 0]}>

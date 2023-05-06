@@ -30,11 +30,7 @@ export function Graffiti(props) {
 				2,
 			);
 
-			tl.to(
-				ref.current.position,
-				{ y: -10, duration: 2, ease: "power2.inOut" },
-				3.05,
-			);
+			tl.to(ref.current.rotation, { y: Math.PI / 2, duration: 2 }, 3);
 		}
 	}, [tl]);
 	return (

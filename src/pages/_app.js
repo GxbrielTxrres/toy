@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }) {
 	return (
 		<>
 			<Canvas style={{ ...styles }} gl={{ antialias: false }}>
-				<ScrollControls pages={2}>
+				<ScrollControls pages={3}>
 					<Experience />
 				</ScrollControls>
 			</Canvas>

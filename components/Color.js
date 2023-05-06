@@ -28,5 +28,5 @@ export default function Color({ tl }) {
 			);
 		}
 	}, [tl]);
-	return <color ref={color} args={["#ffffff"]} attach={"background"} />;
+	return <color ref={color} args={["#000000"]} attach={"background"} />;
 }

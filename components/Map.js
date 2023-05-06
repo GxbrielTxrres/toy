@@ -7,16 +7,39 @@ Source: https://sketchfab.com/3d-models/day-of-the-dead-environment-0ca274a555ac
 Title: Day of the Dead Environment
 */
 
-import React, { useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 
 export function Map(props) {
+	const { tl, ...otherProps } = props;
 	const { nodes, materials } = useGLTF(
 		"/day_of_the_dead_environment-transformed.glb",
 	);
+
+	const ref = useRef();
+
+	useLayoutEffect(() => {
+		Object.values(materials).forEach((material) => {
+			material.envMapIntensity = 0.4;
+			material.opacity = 0;
+			material.transparent = true;
+
+			if (tl) {
+				tl.to(
+					material,
+					{
+						opacity: 1,
+						duration: 1,
+						ease: "power0.inOut",
+					},
+					4,
+				);
+			}
+		});
+	}, [tl]);
 	return (
-		<group {...props} dispose={null}>
+		<group {...otherProps} ref={ref} dispose={null}>
 			<group rotation={[-Math.PI / 2, 0, 0]}>
 				<mesh
 					geometry={nodes.Object_2.geometry}

@@ -1,11 +1,10 @@
 import Camera from "./Camera";
 import Color from "./Color";
-import Effects from "./Effects";
 
 import { OrbitControls, useScroll } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import { useLayoutEffect, useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { gsap } from "gsap";
 import Background from "./Background";
 import { Calaveras } from "./Calaveras";
@@ -14,9 +13,11 @@ import { Skull } from "./Skull";
 import { Map } from "./Map";
 import { useControls } from "leva";
 import { MarysHug } from "./MarysHug";
+import Effects from "./Effects";
 
 export default function Experience() {
 	const [tl, setTl] = useState();
+	const { width, height } = useThree();
 	const timeline = useRef();
 	const scroll = useScroll();
 
@@ -47,10 +48,10 @@ export default function Experience() {
 	return (
 		<>
 			<Perf />
+			<Background tl={tl} width={width} height={height} />
 			<Effects />
-			<Background />
 			{/* <OrbitControls /> */}
-			{/* <Map scale={0.005} position={[0, 0, -10]} /> */}
+			<Map tl={tl} scale={0.01} position={[0, -3, -20]} />
 			{/* <Calaveras position={[0, -1, 0]} /> */}
 			<Graffiti tl={tl} position={[-8.5, -3.4, -40]} />
 			<MarysHug tl={tl} position={[0.1, -2.8, -7.15]} scale={0.0014} />

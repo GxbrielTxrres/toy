@@ -34,6 +34,17 @@ export default function Camera({ tl }) {
 				},
 				2.5,
 			);
+
+			tl.to(
+				camera.position,
+				{ z: -20, duration: 3, ease: "power3.inOut" },
+				4,
+			);
+			tl.to(
+				camera.rotation,
+				{ x: -Math.PI * 0.1, duration: 3, ease: "power3.inOut" },
+				4,
+			);
 		}
 	}, [tl]);
 
